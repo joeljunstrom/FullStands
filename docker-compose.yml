@@ -1,0 +1,23 @@
+version: '3'
+services:
+  database:
+    build:
+      context: ./
+      dockerfile: Dockerfile.postgres
+    volumes:
+      - database-data:/var/opt/database/data
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=fullstands
+    ports:
+      - "127.0.0.1:12500:5432"
+  redis:
+    image: circleci/redis
+    volumes:
+      - redis-data:/data
+    ports:
+      - "127.0.0.1:12501:6379"
+volumes:
+  database-data:
+  redis-data:

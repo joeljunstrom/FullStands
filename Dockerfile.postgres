@@ -1,0 +1,9 @@
+FROM postgres:15.3
+
+# Set the locale
+ENV POSTGRES_HOST_AUTH_METHOD trust
+RUN apt-get -y update
+RUN apt-get -y install locales locales-all
+RUN locale-gen sv_SE
+RUN locale-gen sv_SE.UTF-8
+RUN update-locale
