@@ -1,3 +1,3 @@
 class ApplicationMailbox < ActionMailbox::Base
-  # routing /something/i => :somewhere
+  routing(/\A[A-z]*@ebiljett.nu\z/i => :somewhere)
 end

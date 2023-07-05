@@ -10,9 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_01_130413) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_01_190355) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "plpgsql"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "ticket_source_status", ["pending", "processing", "completed", "rejected"]
+  create_enum "ticket_status", ["pending", "processing", "available", "claimed", "rejected"]
 
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
@@ -51,6 +57,52 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_01_130413) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "games", force: :cascade do |t|
+    t.bigint "opponent_id"
+    t.datetime "occurs_at", precision: nil
+    t.index ["occurs_at"], name: "index_games_on_occurs_at", unique: true
+    t.index ["opponent_id"], name: "index_games_on_opponent_id"
+  end
+
+  create_table "sections", force: :cascade do |t|
+    t.text "name"
+    t.text "entrance"
+    t.index ["name"], name: "index_sections_on_name", unique: true
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.citext "name"
+    t.index ["name"], name: "index_teams_on_name", unique: true
+  end
+
+  create_table "ticket_sources", force: :cascade do |t|
+    t.bigint "ticket_id"
+    t.text "message_id", null: false
+    t.enum "status", default: "pending", null: false, enum_type: "ticket_source_status"
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ticket_id"], name: "index_ticket_sources_on_ticket_id"
+  end
+
+  create_table "tickets", force: :cascade do |t|
+    t.bigint "game_id"
+    t.bigint "section_id"
+    t.enum "status", default: "pending", null: false, enum_type: "ticket_status"
+    t.text "identifier"
+    t.text "row"
+    t.text "seat"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_tickets_on_game_id"
+    t.index ["identifier"], name: "index_tickets_on_identifier", unique: true
+    t.index ["section_id"], name: "index_tickets_on_section_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "games", "teams", column: "opponent_id"
+  add_foreign_key "ticket_sources", "tickets"
+  add_foreign_key "tickets", "games"
+  add_foreign_key "tickets", "sections"
 end

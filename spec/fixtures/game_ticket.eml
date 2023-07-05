@@ -1,0 +1,77 @@
+Delivered-To: name+gameday@example.com
+Received: by 2002:ab3:5d1a:0:b0:238:a53a:8059 with SMTP id j26csp2425544ltc;
+        Sat, 1 Jul 2023 11:45:30 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGjJCGJhJEhw5akf+uyWJKc/ahQdg9VMf3Fg+ranorpheGe/UoNQ3vTLHhbP7fsxRfug0re
+X-Received: by 2002:adf:f209:0:b0:314:2bd2:9611 with SMTP id p9-20020adff209000000b003142bd29611mr2444916wro.34.1688237130692;
+        Sat, 01 Jul 2023 11:45:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1688237130; cv=none;
+        d=google.com; s=arc-20160816;
+        b=s71JslM7/aEQPA1apCN+JKYtkPlSaVtayeR7osXeNKPwI2LnbC3zlw2BDYGIbSY4aP
+         nLIECGAhNRSZHjCydnwqLDcJFn9g3Ed5I310cBFUhWQS1MIMXczEU5UJTM/PxV88ytDY
+         /raIP1X1t+3RQXyN4BrO8kavsNXpouH1WeTdY+vXVtpFG9jXW1ettIA99b5hqG73RiQW
+         yRMOxwdr0fDQwmzADzgF6zC1m2NIG9Rea5SdH83pADtJD2fgJ8TJypR5Xb1blTp8ADjf
+         dKLjTJJbdIMzPTooEKWKukVQ8LGuw2OrXGmqBCKfd45/cd34emJL5yw8xZ37rrqfd7NZ
+         bCKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=feedback-id:message-id:content-transfer-encoding:subject:date:to
+         :from:mime-version:dkim-signature:dkim-signature;
+        bh=2z7sykVzw6kQ0kpipANdmfctyxlJ8wpdhLyWonvFjxc=;
+        fh=t1U41Ygxbo6AXe2E8YZyAuAdz8oL0ol2DyJ/djaMJd0=;
+        b=uk5RdymNPPxnc877TanRIWJ2/KqGOglK7yFEO5VhUEmLqj5LDk+b+H6LCgYeC2s9OK
+         5QX/InXsASywjd5cBo8gP7M2k9L391SAwz2QWL/CvuGaY8L01Fj36LyC+tw4eu9n0c7H
+         QUZtXWCxNyM2yh+kfjb8uLZ9XXZw5sNi8zXV/dqLTqI+6UB6a+hf51r0n1dqV/FdDWqN
+         JLTCs5pa8ooPtJh/ybTxn1cXg+8Zo7BVLGURdknqElaQKPnMlolR0Of3EBEePRCSOPtT
+         /z35GKsh1v4mDgXRUMiAd5kA8TtYik2q/7whAh0v7iIpXUvFzBPnSDp8gNQjg4VIlxS2
+         KyQA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@ebiljett.nu header.s=udhqeozvbnfoxrp7tf4wkwnqx2nk5daa header.b=TMSgQncu;
+       dkim=pass header.i=@amazonses.com header.s=shh3fegwg5fppqsuzphvschd53n6ihuv header.b=NwHUZMWJ;
+       spf=pass (google.com: domain of 0102018912c641bb-d66c2c5b-2b45-42f2-9584-2ad8f48ea345-000000@eu-west-1.amazonses.com designates 54.240.4.15 as permitted sender) smtp.mailfrom=0102018912c641bb-d66c2c5b-2b45-42f2-9584-2ad8f48ea345-000000@eu-west-1.amazonses.com
+Return-Path: <0102018912c641bb-d66c2c5b-2b45-42f2-9584-2ad8f48ea345-000000@eu-west-1.amazonses.com>
+Received: from a4-15.smtp-out.eu-west-1.amazonses.com (a4-15.smtp-out.eu-west-1.amazonses.com. [54.240.4.15])
+        by mx.google.com with ESMTPS id k6-20020a5d6e86000000b00307ace1bfecsi11340657wrz.185.2023.07.01.11.45.30
+        for <name+gameday@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 01 Jul 2023 11:45:30 -0700 (PDT)
+Received-SPF: pass (google.com: domain of 0102018912c641bb-d66c2c5b-2b45-42f2-9584-2ad8f48ea345-000000@eu-west-1.amazonses.com designates 54.240.4.15 as permitted sender) client-ip=54.240.4.15;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@ebiljett.nu header.s=udhqeozvbnfoxrp7tf4wkwnqx2nk5daa header.b=TMSgQncu;
+       dkim=pass header.i=@amazonses.com header.s=shh3fegwg5fppqsuzphvschd53n6ihuv header.b=NwHUZMWJ;
+       spf=pass (google.com: domain of 0102018912c641bb-d66c2c5b-2b45-42f2-9584-2ad8f48ea345-000000@eu-west-1.amazonses.com designates 54.240.4.15 as permitted sender) smtp.mailfrom=0102018912c641bb-d66c2c5b-2b45-42f2-9584-2ad8f48ea345-000000@eu-west-1.amazonses.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=udhqeozvbnfoxrp7tf4wkwnqx2nk5daa; d=ebiljett.nu; t=1688237130;
+	h=MIME-Version:From:To:Date:Subject:Content-Type:Content-Transfer-Encoding:Message-ID;
+	bh=UQeMnau2UV8NfUMD7AKBn3/ZtIp23hC/z+MRIT9DOJ0=;
+	b=TMSgQncuqEEdt6s2oOJZLq87h/wIsqMo53I6eDUGO98ktPfOG6fmcliu3rIo72pR
+	i7ScsYQtl4O78+nsDEnZcCVpVlcePdfeTWvikr2oSHc8vPgI01VZrLXcuM4WQvR8S++
+	Nj/kIBq3kmcUw3Kj1GbMkIhfk5s0YrWuqvalwalo=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=shh3fegwg5fppqsuzphvschd53n6ihuv; d=amazonses.com; t=1688237130;
+	h=MIME-Version:From:To:Date:Subject:Content-Type:Content-Transfer-Encoding:Message-ID:Feedback-ID;
+	bh=UQeMnau2UV8NfUMD7AKBn3/ZtIp23hC/z+MRIT9DOJ0=;
+	b=NwHUZMWJNHQ3hCooG3GhLj9BKKo7UVeaYEf53yj1/NAjKus8ZaldRo3YBf1XgKZJ
+	AxNJDB8PNq3USYTPoWvmh7242ZZYKoL8t8BwIcrpabnjC8UeuQ94/VJ+LpbfzdJ1fiL
+	JmZ4XtYAnR1BbFABmmzVnIEFY3HehdaaYsn7+soc=
+MIME-Version: 1.0
+From: teamname@ebiljett.nu
+To: name+gameday@gmail.com
+Date: Sat, 1 Jul 2023 18:45:30 +0000
+Subject: =?utf-8?B?QmlsamV0dGVyIGZyw6VuIGRpbiB2w6RuIEpvZWw=?=
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <0102018912c641bb-d66c2c5b-2b45-42f2-9584-2ad8f48ea345-000000@eu-west-1.amazonses.com>
+Feedback-ID: 1.eu-west-1.g9NGtCRCs5w4uO0FLtFtnPh3lVLf7tXXNyU8kfo7fYE=:AmazonSES
+X-SES-Outgoing: 2023.07.01-54.240.4.15
+
+Hej Name. <br />=0D=0ADin v&auml;n Some Name har skickat biljetter ti=
+ll dig. <br />=0D=0AMeddelande: G&#xE5; p&#xE5; matchen! <br />=0D=0A=
+<br />=0D=0A<ul>=0D=0A    <li>=0D=0A        <a href=3D"https://te=
+amname.ebiljett.nu/Ticket/Download/identifier-123">=0D=0A       =
+     H&#xE4;mta biljett/er som pdf=0D=0A        </a>=0D=0A    </l=
+i>=0D=0A    <li>=0D=0A        <a href=3D"https://teamname.ebi=
+ljett.nu/Ticket/Show/identifier-123">=0D=0A            H&#xE4;mta mo=
+bilbiljetter=0D=0A        </a>=0D=0A    </li>=0D=0A    <li>=0D=0A=
+        <a href=3D"https://teamname.ebiljett.nu/Ticket/Downlo=
+adReceipt/identifier-123">=0D=0A            H&#xE4;mta kvitto=0D=0A =
+       </a>=0D=0A    </li>=0D=0A</ul>
+
