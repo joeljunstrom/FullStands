@@ -1,4 +1,3 @@
-require "nokogiri"
 require "http"
 
 class ProcessInboundTicketJob < ApplicationJob
@@ -16,58 +15,35 @@ class ProcessInboundTicketJob < ApplicationJob
         .map { |n| n["href"] }
         .detect { |url| url.include?("Ticket/Show") }
 
-    ticket_doc =
-      Nokogiri::HTML(HTTP.get(ticket_url).to_s)
+    ticket_html =
+      HTTP.get(ticket_url).to_s
 
-    section_name, row, seat = ticket_doc.css(".location-info .row h5").map(&:text)
-    section_entrance = ticket_doc.css(".zone-info h5").text.upcase.gsub(/ENTRÉ/, "").strip.presence
-    ticket_identifier = ticket_doc.css(".barcode-text").text.strip
-
-    game_info = ticket_doc.css(".fixture-info .info")
-    opponent_name =
-      game_info
-        .css("h5")
-        .text
-        .split("-")
-        .map(&:strip)
-        .reject { |name| name.match?(/hammarby/i) }
-        .first
-    _, game_day_date, game_day_time =
-      game_info
-        .css(".date")
-        .map(&:text)
-        .first
-        .lines
-        .reject(&:blank?)
-        .map(&:strip)
-    translated_game_day_date =
-      game_day_date.downcase.gsub(/may|okt/, "maj" => "May", "okt" => "Oct")
-    game_occurs_at =
-      Time.zone.parse("#{translated_game_day_date} #{game_day_time}")
+    parsed_ticket =
+      Tickets::MobileHtmlParser.parse(ticket_html)
 
     Ticket.transaction do
       opponent =
-        Team.create_or_find_by!(name: opponent_name)
+        Team.create_or_find_by!(name: parsed_ticket.game.opponent_name)
 
       game =
         Game
           .create_with(opponent:)
-          .create_or_find_by!(occurs_at: game_occurs_at)
+          .create_or_find_by!(occurs_at: parsed_ticket.game.occurs_at)
 
       section =
         Section
-          .create_with(entrance: section_entrance)
-          .create_or_find_by!(name: section_name)
+          .create_with(entrance: parsed_ticket.section.entrance)
+          .create_or_find_by!(name: parsed_ticket.section.name)
 
       ticket =
         Ticket
           .create_with(
-            status: "available",
             game:,
-            seat:,
-            row:,
-            section:
-          ).create_or_find_by!(identifier: ticket_identifier)
+            section:,
+            status: "available",
+            seat: parsed_ticket.seat,
+            row: parsed_ticket.row
+          ).create_or_find_by!(identifier: parsed_ticket.identifier)
 
       source.update!(status: "completed", ticket:)
 
