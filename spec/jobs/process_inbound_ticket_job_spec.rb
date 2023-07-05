@@ -2,17 +2,29 @@ require "rails_helper"
 
 RSpec.describe ProcessInboundTicketJob, type: :job do
   include ActiveSupport::Testing::TimeHelpers
+
+  let(:ticket_email) {
+    Rails.root.join("spec/fixtures/game_ticket.eml").read
+  }
+
+  let(:ticket_html) {
+    Rails.root.join("spec/fixtures/ticket.html").read
+  }
+
+  before do
+    # Necessary to ensure we parse the correct year, since we need to infer ”current year”
+    travel_to "2021-01-01"
+  end
+
   it "creates a ticket and and puts it out as available" do
     WebMock
       .stub_request(:get, "https://teamname.ebiljett.nu/Ticket/Show/identifier-123")
-      .to_return(status: 200, body: Rails.root.join("spec/fixtures/ticket.html"))
-
-    travel_to "2021-01-01" # Necessary to ensure we parse the correct year
+      .to_return(status: 200, body: ticket_html)
 
     source =
       TicketSource.create!(
         message_id: SecureRandom.uuid,
-        content: Rails.root.join("spec/fixtures/game_ticket.eml").read
+        content: ticket_email
       )
 
     ProcessInboundTicketJob.perform_now(source.id)

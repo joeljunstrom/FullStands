@@ -1,5 +1,5 @@
 require "nokogiri"
-require "open-uri"
+require "http"
 
 class ProcessInboundTicketJob < ApplicationJob
   queue_as :default
@@ -14,10 +14,10 @@ class ProcessInboundTicketJob < ApplicationJob
       email_doc
         .css("a[href]")
         .map { |n| n["href"] }
-        .first { |url| url.include("Ticket/Show") }
+        .detect { |url| url.include?("Ticket/Show") }
 
     ticket_doc =
-      Nokogiri::HTML(URI.open(ticket_url))
+      Nokogiri::HTML(HTTP.get(ticket_url).to_s)
 
     section_name, row, seat = ticket_doc.css(".location-info .row h5").map(&:text)
     section_entrance = ticket_doc.css(".zone-info h5").text.upcase.gsub(/ENTRÉ/, "").strip.presence
